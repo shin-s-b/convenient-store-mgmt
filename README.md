@@ -1,4 +1,4 @@
-![image](https://user-images.githubusercontent.com/19424600/89319390-01769b00-d6bb-11ea-8c18-242889a63e44.png)
+![image](https://github.com/shin-s-b/ezdelivery_asis/blob/master/logo_kyobo.png)
 
 # 서점 관리 시스템
 
@@ -44,10 +44,10 @@
 비기능적 요구사항
 
 1. 트랜잭션
-   1) 배송 취소되지 않으면 발주 취소를 할 수 없어야 한다.  [Sync 호출] 
+   1) 배송 취소되지 않으면 주문 취소를 할 수 없어야 한다.  [Sync 호출] 
 2. 장애격리
    1) 재고변경 처리가 지연되더라도 고객의 구매는 처리할 수 있도록 유도한다.  [Async (event-driven), Eventual Consistency]
-   2) 배송 시스템에 장애가 발생하면 발주취소는 잠시뒤에 처리될 수 있도록 한다. [Citcuit breaker, fallback]
+   2) 배송 시스템에 장애가 발생하면 주문취소는 잠시뒤에 처리될 수 있도록 한다. [Citcuit breaker, fallback]
 3. 성능
    1. 서점 직원은 주문, 상품 재고 현황에 대해 확인할 수 있어야 한다.  [CQRS]
    2. 서점 직원은 주문, 배송, 상품 재고, 구매 현황들을 알림으로 받을 수 있어야 한다. [Event driven]
@@ -192,7 +192,7 @@
 
 ```
 - 마이크로 서비스를 넘나드는 시나리오에 대한 트랜잭션 처리
-   - 주문 취소시 배송 취소 처리: ACID 트랜잭션 적용. 발주 취소시 배송 취소 처리에 대해서는 Request-Response 방식 처리
+   - 주문 취소시 배송 취소 처리: ACID 트랜잭션 적용. 주문 취소시 배송 취소 처리에 대해서는 Request-Response 방식 처리
    - 배송 완료시 상품 입고 처리: delivery 에서 product 마이크로서비스로 주문요청이 전달되는 과정에 있어서 product 마이크로 서비스가 별도의 배포주기를 가지기 때문에 Eventual Consistency 방식으로 트랜잭션 처리함.
    - 나머지 모든 inter-microservice 트랜잭션: 배달상태, 재고현황 등 모든 이벤트에 대해 카톡을 처리하는 등, 데이터 일관성의 시점이 크리티컬하지 않은 모든 경우가 대부분이라 판단, Eventual Consistency 를 기본으로 채택함.
 ```
@@ -528,12 +528,12 @@ h2와 비슷하여 별다른 작업없이 데이터베이스 제품의 설정(po
   ```shell
   # 배송(Delivery)서비스를 잠시 내려놓음
   
-  # 발주 취소
+  # 주문 취소
   http DELETE http://localhost:8088/orders/3	# Fail
   
   # 배송서비스 재기동
   
-  # 발주 취소
+  # 주문 취소
   http DELETE http://localhost:8088/orders/3  #Success
   ```
 
@@ -608,7 +608,7 @@ public class PolicyHandler{
 ```shell
 # 상품(Product)서비스를 잠시 내려놓음
 
-# 발주 요청
+# 주문 요청
 http POST http://localhost:8088/orders productId=1 quantity=3 status="order"
 
 # 배송 상태 확인
@@ -637,7 +637,7 @@ http GET localhost:8088/products
 
 * 서킷 브레이킹 프레임워크의 선택: istio-injection + DestinationRule
 
-- 시나리오는 (order)-->배송(delivery) 시의 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 발주 요청이 과도할 경우 CB 를 통하여 장애격리.
+- 시나리오는 (order)-->배송(delivery) 시의 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 주문 요청이 과도할 경우 CB 를 통하여 장애격리.
 
 - DestinationRule 를 생성하여 circuit break 가 발생할 수 있도록 설정 최소 connection pool 설정
 
