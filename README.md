@@ -606,7 +606,7 @@ http GET localhost:8088/products
 
 각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 CI/CD는 buildspec.yml을 이용한 AWS codebuild 이다.
 
-- 적용 화면
+- codebuild 빌드 내역 
 
 <img width="1036" alt="스크린샷 2021-07-07 오전 12 29 57" src="https://user-images.githubusercontent.com/14067833/124627470-8c0ede00-deba-11eb-9e1c-49c0cf786d3b.png">
 
