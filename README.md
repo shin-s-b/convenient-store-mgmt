@@ -130,7 +130,7 @@
 
 ## Event Storming 결과
 
-* MSAez 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/XFbKQ9OFTqbG9VE3F1C0D7HV6zH3/mine/afbe18ec37f0d54b1b8b8cfab2cde068
+* http://www.msaez.io/ 로 모델링한 이벤트스토밍을 하였음
 
 ### 이벤트 도출
 
