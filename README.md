@@ -463,23 +463,6 @@ http GET http://localhost:8088/products/1
 http GET http://localhost:8088/payments/1
 ```
 
-## 폴리글랏 퍼시스턴스
-
-Alarm 서비스 특성상 규모가 크지 않고 데이터를 저장하고 빨리 가져올 수 있는 데이터 접근이 빠른 HSQL DB를 사용하기로 하였다. 
-h2와 비슷하여 별다른 작업없이 데이터베이스 제품의 설정(pom.xml) 만으로 HSQL DB에 부착시켰다
-
-```xml
-<dependency>
-  <groupId>org.hsqldb</groupId>
-  <artifactId>hsqldb</artifactId>
-  <version>2.5.2</version>
-  <scope>runtime</scope>
-</dependency>
-```
-
-- DB 적용 후
-
-<img width="1018" alt="스크린샷 2021-07-09 오전 2 53 28" src="https://user-images.githubusercontent.com/14067833/124968857-fa8da080-e060-11eb-9be4-df166e99b3c1.png">
 
 ## 동기식 호출과 Fallback 처리
 
