@@ -168,18 +168,12 @@
 
 <img width="1171" alt="스크린샷 2021-06-30 오전 12 57 48" src="https://user-images.githubusercontent.com/14067833/123830413-38424900-d93e-11eb-82e2-a50f1e04f7b7.png">
 
-### 완성된 1차 모형
+### 완성된 1차 모형이 기능적/비기능적 요구사항을 커버하는지 검증
 
 <img width="1026" alt="스크린샷 2021-07-05 오전 5 30 15" src="https://user-images.githubusercontent.com/14067833/124398711-1b4cb200-dd52-11eb-9038-f1ee05d972eb.png">
 
 ```
 - View Model 추가
-```
-
-### 1차 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
-
-<img width="1026" alt="41E979D4-F6E7-4DBD-956F-2C12BE2EB832" src="https://user-images.githubusercontent.com/14067833/124854479-59f89b80-dfe2-11eb-8f4b-c3be4f1aa165.png">
-
 ```
 - 서점 직원이 상품을 주문 한다. (OK)
 - 본사가 주문된 상품을 배송 한다. (OK)
