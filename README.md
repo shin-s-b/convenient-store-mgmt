@@ -134,7 +134,7 @@
 
 ### 이벤트 도출
 
-<img width="871" alt="스크린샷 2021-06-27 오후 5 19 58" src="https://user-images.githubusercontent.com/14067833/123537754-ff527a80-d76b-11eb-95c3-f87358bb97cf.png">
+<img width="871" alt="스크린샷 2021-06-27 오후 5 19 58" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/%EC%9D%B4%EB%B2%A4%ED%8A%B8%EB%8F%84%EC%B6%9C.png">
 
 ### 부적격 이벤트 탈락
 
