@@ -466,7 +466,7 @@ http GET http://localhost:8088/payments/1
 
 ## 동기식 호출과 Fallback 처리
 
-주문취소(order) -> 배송취소(delivery) 간의 동기식 호출을 하여 일관성을 유지하는 트랜잭션을 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
+주문이 취소되면 배송이 취소되도록 order 와 delivery간에 동기식 호출을 하여 일관성을 유지하는 트랜잭션을 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
 
 - 배송서비스를 호출하기 위하여 Stub과 FeignClient를 이용하여 Service 대행 인터페이스 Proxy를 구현
 
