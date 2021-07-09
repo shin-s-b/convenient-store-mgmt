@@ -168,27 +168,13 @@
 
 <img width="1171" alt="스크린샷 2021-06-30 오전 12 57 48" src="https://user-images.githubusercontent.com/14067833/123830413-38424900-d93e-11eb-82e2-a50f1e04f7b7.png">
 
-### 완성된 1차 모형이 기능적/비기능적 요구사항을 커버하는지 검증
-
+### 완성된 1차 모형
 <img width="1026" alt="스크린샷 2021-07-05 오전 5 30 15" src="https://user-images.githubusercontent.com/14067833/124398711-1b4cb200-dd52-11eb-9038-f1ee05d972eb.png">
-
-1. 기능적
-- 서점 직원이 상품을 주문 한다. (OK)
-- 본사가 주문된 상품을 배송 한다. (OK)
-- 배송이 완료되면 상품을 입고 한다. (OK)
-- 상품 주문시 서점 직원이 view를 통해 주문내역, 상품 재고현황을 조회 가능하다. (OK)
-
-2. 비기능
-- 마이크로 서비스를 넘나드는 시나리오에 대한 트랜잭션 처리
-   - 주문 취소시 배송 취소 처리: ACID 트랜잭션 적용. 주문 취소시 배송 취소 처리에 대해서는 Request-Response 방식 처리
-   - 배송 완료시 상품 입고 처리: delivery 에서 product 마이크로서비스로 주문요청이 전달되는 과정에 있어서 product 마이크로 서비스가 별도의 배포주기를 가지기 때문에 Eventual Consistency 방식으로 트랜잭션 처리함.
-   - 나머지 모든 inter-microservice 트랜잭션: 배달상태, 재고현황 등 모든 이벤트에 대해 카톡을 처리하는 등, 데이터 일관성의 시점이 크리티컬하지 않은 모든 경우가 대부분이라 판단, Eventual Consistency 를 기본으로 채택함.
-```
 
 
 ### 1차 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
 
-<img width="1026" alt="41E979D4-F6E7-4DBD-956F-2C12BE2EB832" src="https://user-images.githubusercontent.com/14067833/124854479-59f89b80-dfe2-11eb-8f4b-c3be4f1aa165.png">
+<img width="1026" alt="41E979D4-F6E7-4DBD-956F-2C12BE2EB832" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/4.png">
 
 ```
 - 편의점주가 상품을 발주 한다. (OK)
@@ -199,7 +185,7 @@
 
 ### 비기능 요구사항에 대한 검증
 
-<img width="1026" alt="9C707C8D-C808-47CB-B4EA-8E94ADA5325C" src="https://user-images.githubusercontent.com/14067833/124854495-5fee7c80-dfe2-11eb-98e4-b619fb5a4f87.png">
+<img width="1026" alt="9C707C8D-C808-47CB-B4EA-8E94ADA5325C" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/5.png">
 
 ```
 - 마이크로 서비스를 넘나드는 시나리오에 대한 트랜잭션 처리
