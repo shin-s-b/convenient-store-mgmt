@@ -134,24 +134,20 @@
 
 ### 이벤트 도출
 
-<img width="871" alt="스크린샷 2021-06-27 오후 5 19 58" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/%EC%9D%B4%EB%B2%A4%ED%8A%B8%EB%8F%84%EC%B6%9C.png">
+<img width="871" alt="스크린샷 2021-06-27 오후 5 19 58" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/1.png">
 
 ### 부적격 이벤트 탈락
 
-<img width="870" alt="스크린샷 2021-06-27 오후 5 24 34" src="https://user-images.githubusercontent.com/14067833/123537841-93244680-d76c-11eb-81c1-b0615ff415f7.png">
+<img width="870" alt="스크린샷 2021-06-27 오후 5 24 34" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/2.png">
 
 ```
 - 과정중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행함
   - 주문 내용이 서점 본사에 전달됨, 상품 조회됨, 결제버튼 클릭됨, 주문 정보 조회됨, 구매 정보 조회됨 : UI 의 이벤트, 업무적인 의미의 이벤트가 아니라서 제외
 ```
 
-### 액터, 커맨드 부착하여 읽기 좋게
+### 액터, 커맨드 부착하고 어그리게잇으로 묶기
 
-<img width="1234" alt="스크린샷 2021-06-27 오후 6 08 48" src="https://user-images.githubusercontent.com/14067833/123539053-cbc71e80-d772-11eb-93cf-32e487758b28.png">
-
-### 어그리게잇으로 묶기
-
-<img width="1223" alt="스크린샷 2021-06-27 오후 6 12 57" src="https://user-images.githubusercontent.com/14067833/123539175-560f8280-d773-11eb-83d5-27bb6b480436.png">
+<img width="1223" alt="스크린샷 2021-06-27 오후 6 12 57" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/3.png">
 
 ### 바운디드 컨텍스트로 묶기
 
