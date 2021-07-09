@@ -361,14 +361,11 @@ server:
  kubectl apply -f service.yaml
 ```
 
-- 배포후
-
-  <img width="1093" alt="스크린샷 2021-07-08 오후 2 47 46" src="https://user-images.githubusercontent.com/14067833/124868969-853bb480-dffb-11eb-8e6a-89a1f5fbe58b.png">
 
 # Correlation
 
 PolicyHandler에서 처리 시 어떤 건에 대한 처리인지를 구별하기 위한 Correlation-key 구현을 
-이벤트 클래스 안의 변수로 전달받아 처리하도록 구현하였다. 
+이벤트 클래스 안의 변수로 전달받아 처리 가능하도록 구현하였다. 
 
 - 주문(Order)시 배송(Delivery), 상품(Product) 등의 상태가 변경되는 걸 확인할 수 있다.
 - 주문(Order) 취소를 수행하면 연관된 배송(Delivery), 상품(Product) 등의 상태가 변경되는 걸 확인할 수 있다.
