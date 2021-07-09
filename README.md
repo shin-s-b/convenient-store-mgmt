@@ -604,7 +604,7 @@ http GET localhost:8088/products
 
 ## CI/CD 설정
 
-각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 AWS를 사용하였으며, CodeBuild script 는 각 프로젝트 폴더 이하에 buildspec.yml 에 포함되었다.
+각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 CI/CD는 buildspec.yml을 이용한 AWS codebuild 이다.
 
 - 적용 화면
 
