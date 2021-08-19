@@ -313,6 +313,7 @@ mvn spring-boot:run
 ## API 게이트웨이
 
 gateway App을 추가 후 application.yaml에 각 마이크로 서비스의 routes를 추가, 서버의 포트를 8080 으로 설정함
+(gateway > src > main > resources > application.yml)
 
 ```yaml
 spring:
@@ -356,6 +357,7 @@ server:
 ```
 
 ```shell
+ cd ../../kubernetes  
  kubectl apply -f deployment.yml
  kubectl apply -f service.yaml
 ```
