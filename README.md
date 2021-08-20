@@ -690,160 +690,19 @@ http GET localhost:8088/products
 
 ## 오토스케일 아웃
 
-앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다.
-
-- (istio injection 적용한 경우) istio injection 적용 해제
-
-  ```shell
-  kubectl label namespace convenientstore istio-injection=disabled --overwrite
-  ```
-
-- Delivery deployment.yml 파일에 resources 설정을 추가한다
-
-  <img width="695" alt="스크린샷 2021-07-08 오후 11 07 05" src="https://user-images.githubusercontent.com/14067833/124936706-bb9c2280-e041-11eb-867b-944c52f4b911.png">
-
-- 배송 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 15프로를 넘어서면 replica 를 10개까지 늘려준다.
-
-  ```shell
-  kubectl autoscale deploy delivery -n convenientstore --min=1 --max=10 --cpu-percent=15
-  ```
-
-​		<img width="866" alt="스크린샷 2021-07-08 오후 11 21 32" src="https://user-images.githubusercontent.com/14067833/124938476-4a5d6f00-e043-11eb-9624-be9114b74e5d.png">
-
-- CB 에서 했던 방식대로 동시 사용자 50명, 워크로드를 1분 동안 걸어준다.
-
-  ```shell
-  siege -c50 -t60S -v --content-type "application/json" 'http://delivery:8080/deliveries POST {"orderId": 1, "productId": 1, "quantity": 3, "status": "delivery"}'
-  ```
-
-- 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다.
-
-  ```shell
-  kubectl get deploy delivery -w -n convenientstore
-  ```
-
-- 어느정도 시간이 흐른 후 (약 30초) 스케일 아웃이 벌어지는 것을 확인할 수 있다.
-
-  <img width="595" alt="스크린샷 2021-07-08 오후 11 30 17" src="https://user-images.githubusercontent.com/14067833/124940623-1be09380-e045-11eb-9ca8-fca9976dba56.png">
-
-  <img width="593" alt="스크린샷 2021-07-08 오후 11 33 58" src="https://user-images.githubusercontent.com/14067833/124940942-5d713e80-e045-11eb-8d22-1167fa0915ea.png">
-
-- siege 의 로그를 보아도 전체적인 성공률이 높아진 것을 확인 할 수 있다.
-
-  <img width="684" alt="스크린샷 2021-07-08 오후 11 42 22" src="https://user-images.githubusercontent.com/14067833/124941978-2e0f0180-e046-11eb-8fd0-7ad310212374.png">
 
 
 ## 무정지 재배포(Readiness Probe)
 
-* 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Autoscaler 이나 CB 설정을 제거함
 
 #### Readness probe 미설정 상태
 
-- seige 로 배포작업 직전에 워크로드를 모니터링 함.
 
-```shell
-siege -c5 -t120S -v --content-type "application/json" 'http://delivery:8080/deliveries POST {"orderId": 1, "productId": 1, "quantity": 3, "status": "delivery"}'
-```
-
-- 새버전으로의 배포 시작
-
-```
-kubectl set image ...
-```
-
-- seige 의 화면으로 넘어가서 Availability 가 100% 미만으로 떨어졌는지 확인
-
-  <img width="413" alt="스크린샷 2021-07-09 오전 12 13 51" src="https://user-images.githubusercontent.com/14067833/124947521-dc1caa80-e04a-11eb-9c83-64a7f22f4d86.png">
-
-배포기간중 Availability 가 평소 100%에서 90% 대로 떨어지는 것을 확인. 원인은 쿠버네티스가 성급하게 새로 올려진 서비스를 READY 상태로 인식하여 서비스 유입을 진행한 것이기 때문. 이를 막기위해 Readiness Probe 를 설정함:
 
 #### Readness probe 설정 상태
 
-```yaml
-# deployment.yml의 readiness probe 설정
-# ...
-readinessProbe:
-  httpGet:
-    path: '/actuator/health'
-    port: 8080
-  initialDelaySeconds: 10
-  timeoutSeconds: 2
-  periodSeconds: 5
-  failureThreshold: 10
-```
-
-- 동일한 시나리오로 재배포 한 후 Availability 확인:
-
-  <img width="462" alt="스크린샷 2021-07-09 오전 12 26 16" src="https://user-images.githubusercontent.com/14067833/124949193-4d109200-e04c-11eb-963a-a4ece38db190.png">
-
-배포기간 동안 Availability 가 변화없기 때문에 무정지 재배포가 성공한 것으로 확인됨.
 
 ## Self-healing(Liveness Probe)
 
-- Delivery deployment.yml 파일 수정
-
-  ```
-  # ...
-  args:
-    # /tmp/healthy 파일 생성하고 30초 후 삭제
-    - /bin/sh
-    - -c
-    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
-  livenessProbe:
-    exec:
-      command:
-        - cat
-        - /tmp/healthy
-    initialDelaySeconds: 120
-    timeoutSeconds: 2
-    periodSeconds: 5
-    failureThreshold: 5
-  ```
-
-- Delivery 기동후 확인
-
-  ``` shell
-  kubectl describe pod delivery -n convenientstore
-  ```
-
-kubelet이 5 초마다 livenessProbe를 수행해야 한다고 지정했다(periodSeconds). 하지만 수행하기 전에 120초정도 기다리고(initialDelaySeconds) 수행한다(`cat /tmp/healthy` 명령어 수행). 명령이 성공하면 0을 반환하고 kubelet은 컨테이너가 살아 있고 정상인 것으로 간주합니다. 명령이 0이 아닌 값을 반환하면 kubelet은 컨테이너를 종료하고 다시 시작합니다.
-
-<img width="1117" alt="스크린샷 2021-07-09 오전 1 28 13" src="https://user-images.githubusercontent.com/14067833/124960071-e2188880-e056-11eb-94e1-ef8fcf524a41.png">
-
-<img width="551" alt="스크린샷 2021-07-09 오전 1 28 34" src="https://user-images.githubusercontent.com/14067833/124960112-f2306800-e056-11eb-9b8a-47fce723027a.png">
-
-## Config Map/Persistence Volume
-
-1. configmap.yaml 파일 생성
-
-   ```yaml
-   apiVersion: v1
-   kind: ConfigMap
-   metadata:
-     name: convenientstore-config
-   data:
-     api.url.delivery: http://delivery:8080
-   ```
-
-2. deployment.yml에 적용
-
-   ```yaml
-   # ...
-             env:
-               - name: api.url.delivery	# configmap.yaml에 있는 key-value
-                 valueFrom:
-                   configMapKeyRef:
-                     name: convenientstore-config
-                     key: api.url.delivery
-   ```
-
-3. 적용 소스
-
-   ```java
-   @FeignClient(name = "delivery", url = "${api.url.delivery}")
-   @RequestMapping("/deliveries")
-   public interface DeliveryService {
-   }
-   ```
 
    
