@@ -299,12 +299,8 @@ mvn spring-boot:run
   ```
 
 - OrderStatusViewHandler 를 통해 구현(ProductPageViewHandler 구현 형태 비슷함)
+- "DeliveryStarted", "DeliveryCanceled" 이벤트 발생 시, Pub/Sub 기반으로 별도 OrderStatus_table 테이블에 저장
 
-  - "DeliveryStarted", "DeliveryCanceled" 이벤트 발생 시, Pub/Sub 기반으로 별도 OrderStatus_table 테이블에 저장
-
-- View 페이지 조회 결과
-
-  <img width="1029" alt="스크린샷 2021-07-08 오후 3 28 07" src="https://user-images.githubusercontent.com/14067833/124873201-1eb99500-e001-11eb-986e-6484f8c81235.png">
 
 ## API 게이트웨이
 
