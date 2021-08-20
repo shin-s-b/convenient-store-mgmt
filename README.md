@@ -599,21 +599,30 @@ http GET localhost:8088/products
 
 - 시나리오는 (order)-->배송(delivery) 시의 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 주문 요청이 과도할 경우 CB 를 통하여 장애격리.
 
-- DestinationRule 를 생성하여 circuit break 가 발생할 수 있도록 설정 최소 connection pool 설정
+- application.yml파일에 sleep , hystrix 
 
-  ```yaml
-  apiVersion: networking.istio.io/v1alpha3
-  kind: DestinationRule
-  metadata:
-    name: dr-delivery
-    namespace: convenientstore
-  spec:
-    host: delivery
-    trafficPolicy:
-      connectionPool:
-        http:
-          http1MaxPendingRequests: 1
-          maxRequestsPerConnection: 1
+  ``` 
+       // 시간 끌기
+       
+        try {   
+            System.out.println("\n\n !!!!!!!!!!!!!!! DELIVERY SYSTEM BREAKING !!!!!!!!!!!!!!!!!!!!! \n\n");
+            Thread.currentThread().sleep((long) (800 + Math.random() * 220));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+	
+	
+	//Hystrix 
+	feign:
+	  hystrix:
+	    enabled: true
+	hystrix:
+	  command:
+	    default:
+	      execution.isolation.thread.timeoutInMilliseconds: 1000
+
+	
+	
   ```
 
 - istio-injection 활성화 및 delivery pod container 확인
@@ -623,44 +632,61 @@ http GET localhost:8088/products
   kubectl label namespace convenientstore istio-injection=enabled 
   ```
 
-  <img width="423" alt="스크린샷 2021-07-08 오후 9 39 09" src="https://user-images.githubusercontent.com/14067833/124922982-f9467e80-e034-11eb-8842-39f127b5b191.png">
-
-  <img width="523" alt="스크린샷 2021-07-08 오후 9 45 08" src="https://user-images.githubusercontent.com/14067833/124923851-ce105f00-e035-11eb-9011-060b1fbea099.png">
 
 - 부하테스터 siege 툴을 통한 서킷 브레이커 동작 확인:
 
   - siege 실행
 
   ```shell
-  kubectl run siege --image=apexacme/siege-nginx -n convenientstore
-  kubectl exec -it siege -c siege -n convenientstore -- /bin/bash
+  kubectl run siege --image=apexacme/siege-nginx
+  kubectl exec -it pod/siege-5c7c46b788-47vtc -- bash
   ```
 
   - 동시사용자 1로 부하 생성 시 모두 정상
-
   ```shell
-  siege -c1 -t10S -v --content-type "application/json" 'http://delivery:8080/deliveries POST {"orderId": 1, "productId": 1, "quantity": 3, "status": "delivery"}'
+  
+  kubectl exec -it pod/siege-5c7c46b788-47vtc -- bash
+  siege -c1 -t10S -v http://delivery:8080
+
   ```
 
-  <img width="1214" alt="스크린샷 2021-07-08 오후 9 58 06" src="https://user-images.githubusercontent.com/14067833/124925616-999da280-e037-11eb-8b7a-b2c78c8c2121.png">
-
-  - 동시사용자 10로 부하 생성 시 503 에러 발생
-
+  - 부하 생성 테스트
   ```shell
-  siege -c10 -t10S -v --content-type "application/json" 'http://delivery:8080/deliveries POST {"orderId": 1, "productId": 1, "quantity": 3, "status": "delivery"}'
+  siege -c50 -t30S --content-type "application/json" 'http://order:8080/orders POST {"productId": "1", "status":"order"}' -v
   ```
+  <img width="1224" alt="스크린샷 2021-07-08 오후 10 04 56" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/5_siege.png">
 
-  <img width="1224" alt="스크린샷 2021-07-08 오후 10 04 56" src="https://user-images.githubusercontent.com/14067833/124926567-a2db3f00-e038-11eb-9da7-50cb5d04fece.png">
 
-  <img width="577" alt="스크린샷 2021-07-08 오후 10 05 11" src="https://user-images.githubusercontent.com/14067833/124926612-b090c480-e038-11eb-8e79-d1c70fe0673a.png">
-
-  - 다시 최소 Connection pool로 부하시 정상 확인
-
-  <img width="837" alt="스크린샷 2021-07-08 오후 10 20 10" src="https://user-images.githubusercontent.com/14067833/124928638-bbe4ef80-e03a-11eb-8547-190e0bf40412.png">
-
+  - 다시 최소 Connection pool로 부하시 정상
 - 운영시스템은 죽지 않고 지속적으로 CB 에 의하여 적절히 회로가 열림과 닫힘이 벌어지면서 자원을 보호하고 있음을 보여줌. 하지만, 75.24% 가 성공하였고, 25%가 실패했다는 것은 고객 사용성에 있어 좋지 않기 때문에 Retry 설정과 동적 Scale out (replica의 자동적 추가,HPA) 을 통하여 시스템을 확장 해주는 후속처리가 필요.
 - Retry 의 설정 (istio)
 - Availability 가 높아진 것을 확인 (siege)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================
 
 ## 오토스케일 아웃
 
