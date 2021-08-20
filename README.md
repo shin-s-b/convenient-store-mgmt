@@ -370,28 +370,19 @@ PolicyHandler에서 처리 시 어떤 건에 대한 처리인지를 구별하기
 
 
 상품 등록
+<img width="1158" alt="스크린샷 2021-07-08 오후 2 06 43" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/1_http%EA%B2%B0%EA%B3%BC.png">
 
-<img width="1158" alt="스크린샷 2021-07-08 오후 2 06 43" src="https://user-images.githubusercontent.com/14067833/124869794-acdf4c80-dffc-11eb-95fd-218e7e5f1d43.png">
 
-주문 (Product 수량 변경 10 -> 13)
+주문
+<img width="1256" alt="스크린샷 2021-07-08 오후 3 01 35" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/3_order.png">
+<img width="1120" alt="스크린샷 2021-07-08 오후 3 24 31" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/3_order2.png">
 
-<img width="1256" alt="스크린샷 2021-07-08 오후 3 01 35" src="https://user-images.githubusercontent.com/14067833/124872829-b5d21d00-e000-11eb-953e-66af8559c91e.png">
-
-<img width="1120" alt="스크린샷 2021-07-08 오후 3 24 31" src="https://user-images.githubusercontent.com/14067833/124872897-c6829300-e000-11eb-897c-fc19e9130d46.png">
-
-<img width="1009" alt="스크린샷 2021-07-08 오후 3 26 34" src="https://user-images.githubusercontent.com/14067833/124873041-eca83300-e000-11eb-9e69-43c319c63376.png">
 
 주문 취소
+- 주문 실행하면 관련 Order, Delivery 데이터는 Delete가 되어 없어지고 OrderStatus, ProductPage에는 이력이 남게 된다. 
+<img width="1037" alt="스크린샷 2021-07-08 오후 3 41 48" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/4_delete.png">
+<img width="1094" alt="스크린샷 2021-07-08 오후 3 42 22" src="https://github.com/shin-s-b/ezdelivery_asis/blob/master/4_delete2.png">
 
-- 주문 실행하면 관련 Order, Delivery 데이터는 Delete가 되어 없어지고 관련 Product 수량은 13 -> 10으로 줄어든 것을 볼 수 있으며 OrderStatus, ProductPage에는 이력이 남게 된다. 
-
-<img width="1037" alt="스크린샷 2021-07-08 오후 3 41 48" src="https://user-images.githubusercontent.com/14067833/124874941-4873bb80-e003-11eb-8637-a248c534f150.png">
-
-<img width="1094" alt="스크린샷 2021-07-08 오후 3 42 22" src="https://user-images.githubusercontent.com/14067833/124874997-5c1f2200-e003-11eb-9b2d-13696db80cdc.png">
-
-<img width="1015" alt="스크린샷 2021-07-08 오후 3 42 34" src="https://user-images.githubusercontent.com/14067833/124875047-693c1100-e003-11eb-9c9f-158f87147b94.png">
-
-<img width="1038" alt="스크린샷 2021-07-08 오후 3 43 21" src="https://user-images.githubusercontent.com/14067833/124875081-735e0f80-e003-11eb-9fe0-65b3b8906051.png">
 
 
 ## DDD 의 적용
@@ -601,14 +592,10 @@ http GET localhost:8088/products
 # 운영
 
 ## CI/CD 설정
+- 각 구현체들은 각각의 source repository 에 구성하였고, Image repository는 ECR 사용하였다.
+- build script 는 각 프로젝트 폴더 이하에 cloudbuild.yml 에 있다.
 
-각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 CI/CD는 buildspec.yml을 이용한 AWS codebuild 이다.
 
-- codebuild 빌드 내역 
-
-<img width="1036" alt="스크린샷 2021-07-07 오전 12 29 57" src="https://user-images.githubusercontent.com/14067833/124627470-8c0ede00-deba-11eb-9e1c-49c0cf786d3b.png">
-
-<img width="1048" alt="스크린샷 2021-07-08 오후 12 49 36" src="https://user-images.githubusercontent.com/14067833/124859501-076fad00-dfeb-11eb-9c83-7da7af2330ff.png">
 
 ## 동기식 호출 / 서킷 브레이킹 / 장애격리
 
