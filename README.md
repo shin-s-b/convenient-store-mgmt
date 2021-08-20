@@ -1,8 +1,3 @@
-![image](https://github.com/shin-s-b/ezdelivery_asis/blob/master/logo_kyobo.png)
-
-
-
-
 
 
 # 상점 관리 시스템
